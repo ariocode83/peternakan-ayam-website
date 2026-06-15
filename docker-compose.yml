@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (optional - use Supabase for MVP)
+  # db:
+  #   image: postgres:15
+  #   environment:
+  #     POSTGRES_USER: peternakan
+  #     POSTGRES_PASSWORD: password123
+  #     POSTGRES_DB: peternakan_ayam
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+    volumes:
+      - ./backend/src:/app/src
+    command: npm run dev
+    depends_on:
+      - frontend
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+    command: npm run dev
+
+volumes:
+  postgres_data:
+
+# Usage: docker-compose up
